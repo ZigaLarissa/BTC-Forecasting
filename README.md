@@ -47,6 +47,11 @@ columns_to_normalize = ['Close', 'Volume_(BTC)', 'Volume_(Currency)', 'Weighted_
 data[columns_to_normalize] = scaler.fit_transform(data[columns_to_normalize])
 ```
 
+PS: the dataset stored in the data folder as mentioned in the code wasn't pushed on GitHub due to how big it was, alongside the dependencies used virtual environment where the notebook was run. 
+
+However, you can get the respective dataset through the following link:
+- [https://drive.google.com/file/d/16MgiuBfQKzXPoWFWi2w-LKJuZ7LgivpE/view?usp=sharing](Coin_base_dataset)
+
 We chose to use MinMaxScaler for normalization because it scales the features to a fixed range of [0, 1]. This is particularly useful for neural networks, as it ensures that all features are on the same scale, preventing any single feature from dominating the others due to its magnitude.
 
 ## Setting Up tf.data.Dataset for Model Inputs
@@ -83,14 +88,16 @@ For this project, we chose to use a Long Short-Term Memory (LSTM) network. LSTMs
 Here's our model architecture:
 
 ```python
-model = tf.keras.Sequential([
-    tf.keras.layers.LSTM(50, return_sequences=True, input_shape=(time_step, 1)),
-    tf.keras.layers.LSTM(50, return_sequences=False),
-    tf.keras.layers.Dense(25),
-    tf.keras.layers.Dense(1)
-])
-
-model.compile(optimizer='adam', loss='mean_squared_error')
+model = Sequential([
+        LSTM(100, return_sequences=True, input_shape=input_shape),
+        Dropout(0.2),
+        LSTM(100, return_sequences=False),
+        Dropout(0.2),
+        Dense(50),
+        Dense(1)
+    ])
+    model.compile(optimizer='adam', loss='mean_squared_error')
+    return model
 ```
 
 We chose this architecture for several reasons:
